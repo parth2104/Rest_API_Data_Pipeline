@@ -1,0 +1,24 @@
+ # The main pipeline for Rest_API_Bundle
+
+resources:
+  pipelines:
+    Rest_API_Bundle_etl:
+      name: Bronze_Silver
+
+      configuration:
+        catalog_name: ${var.catalog}
+
+      libraries:
+        - glob:
+            include: "../src/DLT_Pipelines/New Pipeline 2026-05-27 15:31/transformations/**"
+
+      schema: silver_2
+      catalog: ${var.catalog}
+
+      continuous: false
+      development: false
+      photon: true
+      channel: CURRENT
+      serverless: true
+
+      root_path: "../src/DLT_Pipelines/New Pipeline 2026-05-27 15:31"

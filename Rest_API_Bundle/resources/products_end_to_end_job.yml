@@ -1,0 +1,26 @@
+resources:
+  jobs:
+    Product_data_end_end_job:
+      name: Product_data_end_end_job
+      tasks:
+        - task_key: Data_Ingestion
+          notebook_task:
+            notebook_path: ../src/notebooks/Ingestion_Bronze.ipynb
+            base_parameters:
+              catlog_name: ${var.catalog}
+            source: WORKSPACE
+        - task_key: bronze_to_silver
+          depends_on:
+            - task_key: Data_Ingestion
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.Rest_API_Bundle_etl.id}
+        - task_key: Product_Details
+          depends_on:
+            - task_key: bronze_to_silver
+          dashboard_task:
+            subscription: {}
+            warehouse_id: 8db9114edf752cdf
+            dashboard_id: 01f15a6df79b174f8c50430f5b903329
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
